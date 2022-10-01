@@ -1,0 +1,66 @@
+unit bankingapp_u;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, homeScreen_u,bankingDM,
+  Vcl.StdCtrls;
+
+type
+  TBnkLoginFM = class(TForm)
+    lblHeader: TLabel;
+    lblUserName: TLabel;
+    lblPassword: TLabel;
+    edtUserName: TEdit;
+    edtPassword: TEdit;
+    btnLogin: TButton;
+    procedure btnLoginClick(Sender: TObject);
+
+
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  BnkLoginFM: TBnkLoginFM;
+
+implementation
+
+{$R *.dfm}
+
+
+
+
+
+procedure TBnkLoginFM.btnLoginClick(Sender: TObject);
+var
+  luser : String;
+  lpass : String;
+begin
+  DataModule1.ADOQuery1.Active:= True;
+  with DataModule1.ADOQuery1 do
+  begin
+    Active:= True;
+    Close;
+    SQL.Clear;
+    SQL.Add('Select UserID FROM Customer_details WHERE UserID=: UserName and C_Password=:Password');
+    Parameters.ParamByName('UserName').Value.edtUserName.Text;
+    Parameters.ParamByName('Password').Value.edtPassword.Text;
+    open;
+    luser := fieldbyname ('UserID').asstring;
+    if luser='' then
+    ShowMessage('Incorrect Userid or Password')
+    else
+    begin
+      DataModule1.ADOQueryinsert.Active:= True;
+
+    end;
+
+  end;
+end;
+
+end.

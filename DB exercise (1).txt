@@ -1,0 +1,130 @@
+1. Create the following tables 
+     Customer_Details table
+      - Customer id  - primary key
+      - First name
+      - Last Name
+      - date of birth
+      - City
+      - Account no
+
+     Account_Details table
+      - Account no   - primary key
+      - Account_type
+      - Creation date
+      - Min balance
+      - current balance
+
+     Account_Type table
+      - Account_type - primary key
+      - Account_name
+
+2. Insert following records in Customer_Details table
+
+    i.    1 , Vania, Dsouza, 16-Dec-1990  , Vasco    , C001
+   ii.    2 , Pooja  , Naik   , 8-Feb-1990  , Ponda    , S011
+  iii.    '3 ','Pranal' , 'Bhat ', '22-Oct-1989' , 'Ponda','C002'
+   iV.  4 ,'Rita', 'Dias','8-Oct-1990','Ponda','S012'
+    v.    5 , 'Steffy , Dias' , '13-Oct-1989' , 'Cuncolim' ,'C003'
+   vi.    6,'Brian','Lara','18-Feb-1992','Chandor ','C004'
+
+
+3. Insert following records in 	Account_Details table
+
+   i. C001, A1 , 11-Jan-2010 , 10000 , 12000
+  ii. 'S011', 'A2' ,'14-Aug-2011' , '20000', '18500'
+ iii. 'C002', 'A1' , '29-Jul-2010 ', '10000', '16000'
+  iv. 'S012', 'A2' , '2009-05-12' , 20000 , 22000
+   v. 'C003',' A1' , '2011-04-29 ', 10000 , 14800
+  vi. 'C004', 'A1', '2009-03-29' , 10000 ,  9000
+
+
+4. Insert following records in Account_Type table
+
+   i.  A1 , Current Account
+  ii.  A2 , saving Account
+
+#use bankingdatabase
+#select * from account_details
+#select * from customer_details
+#select * from account_type
+
+5.  Find out the customers whose first name starts with S
+#select * from customer_details where First_name like 'S%'
+
+6.  Find out All the customers from Ponda
+#select * from customer_details where city= 'Ponda'
+
+7.  Find out how many customers are there from each city
+#SELECT City, COUNT(Customer_id) FROM customer_details GROUP BY City;
+
+8.  Find out the current balance of Rita
+/*
+select current_balance
+from account_details
+right join customer_details
+on account_details.account_no=customer_details.account_no
+where first_name='rita'
+*/
+
+9.  Find out the date of creation of account for Brian
+/*
+select First_name, creation_date
+from account_details
+right join customer_details
+on account_details.account_no=customer_details.account_no
+where first_name='Brian'
+*/
+
+10. Find which customers have current balance less than min balance
+/*
+select first_name ,current_balance,min_balance
+from customer_details
+right join account_details
+on account_details.account_no=customer_details.account_no
+where current_balance<min_balance
+*/
+
+11. Find out which customers have Current Account
+/*
+select Account_no, Account_name
+from account_details
+right join account_type
+on account_type.Account_type=account_details.Account_type
+where Account_name='Current Account'
+*/
+
+12. Find the unique cities of the customers
+select distinct City as 'Unique City' from customer_details order by City asc
+
+13. Find the customer having maximum account balance
+/*
+SELECT * FROM Customer_details
+INNER JOIN account_details ON Customer_details.Account_no = account_details.Account_no
+WHERE current_balance=(SELECT max(current_balance) FROM account_details);
+
+/*
+select Customer_id, First_name, Last_name, max(current_balance) as 'Maximum Balance'
+from account_details
+left join customer_details
+on account_details.Account_no=customer_details.Account_no
+*/
+
+14. Find how many customers are there in the bank
+/*
+select count(customer_id) as 'Customers in Bank'
+from customer_details
+*/
+
+15. Find age of all customers
+select Customer_id, First_name, Last_name, birth_date, timestampdiff(Year,birth_date,now()) as Age
+from customer_details;
+
+
+16. Add one more column 'Nationality'.
+/*
+alter table customer_details
+add Nationality varchar(45)
+*/
+
+17. Alter any column.
+#ALTER TABLE customer_details CHANGE date_of_birth birth_date DATETIME

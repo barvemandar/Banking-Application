@@ -1,0 +1,18 @@
+program bankingapp_p;
+
+uses
+  Vcl.Forms,
+  bankingapp_u in 'bankingapp_u.pas' {Form1},
+  bankingDM in 'bankingDM.pas' {DataModule1: TDataModule},
+  homeScreen_u in 'homeScreen_u.pas' {Form2};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TDataModule1, DataModule1);
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

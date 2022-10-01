@@ -1,0 +1,416 @@
+unit homeScreen_u;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls, bankingDM, Vcl.Buttons, Data.Win.ADODB;
+
+type
+  TbankDetailsFm = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    lblFirstName: TLabel;
+    lblLastName: TLabel;
+    lblAccNo: TLabel;
+    lblCity: TLabel;
+    edtFirstName: TEdit;
+    edtLastName: TEdit;
+    edtAccNo: TEdit;
+    edtCity: TEdit;
+    btnAdd: TButton;
+    btnUpdate: TButton;
+    btnDelete: TButton;
+    lblHeader: TLabel;
+    PageControl1: TPageControl;
+    tbsCustomerDetails: TTabSheet;
+    tbsAccDetails: TTabSheet;
+    Panel2: TPanel;
+    lblCurrentBalance: TLabel;
+    lblDebitCredit: TLabel;
+    edtCurrentBalance: TEdit;
+    edtDebitCredit: TEdit;
+    btnDebit: TButton;
+    btnCredit: TButton;
+    btnBalance: TButton;
+    lblCustomerDetails: TLabel;
+    lblAccDetails: TLabel;
+    btnClear: TButton;
+    Label2: TLabel;
+    ComboBox1: TComboBox;
+    btnLogout: TButton;
+    Label3: TLabel;
+    dtpDOB: TDateTimePicker;
+    Label4: TLabel;
+    ComboBox2: TComboBox;
+    DBGrid1: TDBGrid;
+    RadioGroup1: TRadioGroup;
+    procedure btnClearClick(Sender: TObject);
+    procedure btnDebitClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
+    procedure btnAddClick(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
+    procedure btnBalanceClick(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure FormCreate(Sender: TObject);
+    procedure btnLogoutClick(Sender: TObject);
+    procedure btnCreditClick(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+
+    //procedure FormClose(Sender: TObject; var Action: TCloseAction);
+
+
+
+
+
+
+
+
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  bankDetailsFm: TbankDetailsFm;
+  gcustomerid : Integer;
+  gbalance : Integer;
+  gDebitCredit : Integer;
+  gAccNo : String;
+  dateset : TDateTime;
+implementation
+uses
+  bankLogin_u;
+
+{$R *.dfm}
+
+
+
+
+procedure TbankDetailsFm.btnClearClick(Sender: TObject);
+begin
+
+  bankDetailsFm.edtFirstName.Clear;
+  bankDetailsFm.edtLastName.Clear;
+  bankDetailsFm.edtAccNo.Clear;
+  bankDetailsFm.edtCity.Clear;
+  bankDetailsFm.edtCurrentBalance.Clear;
+  bankDetailsFm.edtDebitCredit.Clear;
+ // bankDetailsFm.edtDOB.Clear;
+end;
+
+procedure TbankDetailsFm.btnCreditClick(Sender: TObject);
+begin
+  if edtDebitCredit.Text<>'' then
+
+  begin
+    if TButton(Sender).Caption='Debit' then
+    begin
+      gDebitCredit:=abs(gbalance) - StrToInt( edtDebitCredit.Text);
+    end
+    else
+      gDebitCredit:= StrToInt( edtDebitCredit.Text) + gbalance;
+      if gcustomerid <>0 then
+      begin
+        with DataModule1.ADOQueryupdate do
+        begin
+        Close;
+        SQL.Clear;
+        SQL.Text:= 'update account_details set current_balance= :balance' +
+        ' where Account_no= :ID';
+        Parameters.ParamByName('balance').Value:=gDebitCredit;
+        Parameters.ParamByName('ID').Value:=gAccNo;
+        ExecSQL;
+        Close;
+        ShowMessage('Balance ' + TButton(Sender).Caption + 'ed Successfully');
+        bankDetailsFm.edtFirstName.Clear;
+        bankDetailsFm.edtLastName.Clear;
+        bankDetailsFm.edtAccNo.Clear;
+        bankDetailsFm.edtCity.Clear;
+        bankDetailsFm.edtCurrentBalance.Clear;
+        bankDetailsFm.edtDebitCredit.Clear;
+        //bankDetailsFm.edtDOB.Clear;
+        gcustomerid:=0;
+
+        end;
+        DataModule1.ADOQueryinsert.Active:= False;
+        DataModule1.ADOQueryinsert.Active:= True;
+        DBGrid1.DataSource:= DataModule1.DataSource2;
+      end
+      else
+      ShowMessage('Select customer to DEBIT or CREDIT');
+
+  end;
+end;
+
+procedure TbankDetailsFm.btnDebitClick(Sender: TObject);
+begin
+
+  if StrToInt(edtDebitCredit.Text) > StrToInt(edtCurrentBalance.text) then
+  begin
+    ShowMessage('Not Enough Balance');
+   end
+   else
+   if edtDebitCredit.Text<>'' then
+  begin
+    if TButton(Sender).Caption='Debit' then
+    begin
+      gDebitCredit:=abs(gbalance) - StrToInt( edtDebitCredit.Text);
+    end;
+      if gcustomerid <>0 then
+      //begin
+        with DataModule1.ADOQueryupdate do
+        begin
+        Close;
+        SQL.Clear;
+        SQL.Text:= 'update account_details set current_balance= :balance' +
+        ' where Account_no= :ID';
+        Parameters.ParamByName('balance').Value:=gDebitCredit;
+        Parameters.ParamByName('ID').Value:=gAccNo;
+        ExecSQL;
+        Close;
+        ShowMessage('Balance ' + TButton(Sender).Caption + 'ed Successfully');
+        bankDetailsFm.edtFirstName.Clear;
+        bankDetailsFm.edtLastName.Clear;
+        bankDetailsFm.edtAccNo.Clear;
+        bankDetailsFm.edtCity.Clear;
+        bankDetailsFm.edtCurrentBalance.Clear;
+        bankDetailsFm.edtDebitCredit.Clear;
+        //bankDetailsFm.edtDOB.Clear;
+        gcustomerid:=0;
+
+        end;
+        DataModule1.ADOQueryinsert.Active:= False;
+        DataModule1.ADOQueryinsert.Active:= True;
+        DBGrid1.DataSource:= DataModule1.DataSource2;
+      end
+      else
+      ShowMessage('Select customer to DEBIT or CREDIT');
+
+  end;
+
+//end;
+
+
+procedure TbankDetailsFm.btnDeleteClick(Sender: TObject);
+begin
+  if gcustomerid <> 0 then
+  if MessageDlg('Are you sure want to delete record?',
+  TMsgDlgType.mtConfirmation, [mbYes, mbNo],0 )= mrYes then
+
+  begin
+    with DataModule1.ADOQueryupdate do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Text:='delete from customer_details where Customer_id=:ID';
+      Parameters.ParamByName('ID').Value:= gcustomerid;
+      ExecSQL;
+      Close;
+      Close;
+      SQL.Clear;
+      SQL.Text:= 'delete from account_details where Account_no=:AccNo';
+      Parameters.ParamByName('AccNo').Value:= gAccNo;
+      ExecSQL;
+      Close;
+      ShowMessage('Entry Deleted Succesfully');
+      bankDetailsFm.edtFirstName.Clear;
+      bankDetailsFm.edtLastName.Clear;
+      bankDetailsFm.edtAccNo.Clear;
+      bankDetailsFm.edtCity.Clear;
+      //bankDetailsFm.edtDOB.Clear;
+      gcustomerid:=0;
+    end;
+    DataModule1.ADOQueryinsert.Active:= False;
+    DataModule1.ADOQueryinsert.Active:= True;
+    DBGrid1.DataSource:= DataModule1.DataSource2;
+  end
+  else
+  ShowMessage('Select customer to delete');
+end;
+
+procedure TbankDetailsFm.btnAddClick(Sender: TObject);
+var
+  lAccNo : string;
+begin
+    dateset:= dtpDOB.Date;
+   if gcustomerid =0 then
+  begin
+    if (edtFirstName.Text<>'') then
+    begin
+      with DataModule1.ADOQuery1 do
+      begin
+        Close;
+        SQL.Clear;
+        SQL.Text:='insert into account_details' +
+        '(Account_type,Min_balance,current_balance,Creation_date)'+
+        'values(:AccType,:MinBAl,:MaxBal,:CreDate)';
+        Parameters.ParamByName('AccType').Value:=ComboBox1.Text;
+        Parameters.ParamByName('CreDate').Value:= FormatDateTime('YYY/MM/DD', Now);;
+        Parameters.ParamByName('MinBAl').Value:= '0';
+        Parameters.ParamByName('MaxBal').Value:= '0';
+        ExecSQL;
+        Close;
+       { Close;
+               SQL.Clear;}
+        {SQL.Add('SELECT Account_no FROM account_details  order by Account_no desc ');
+                Open;
+                        lAccNo := FieldByName('Account_no').AsString;}
+        //insert to customertable
+      {  Close;
+              SQL.Clear;}
+        SQL.Text:='insert into customer_details(First_name,Last_Name,'+
+        'City,Gender,Account_no,birth_date)'+
+        ' values(:FirstName,:LastName,:City,:gen,:AccNo,:dob)';
+        Parameters.ParamByName('FirstName').Value:=edtFirstName.Text;
+        Parameters.ParamByName('LastName').Value:=edtLastName.Text;
+        Parameters.ParamByName('City').Value:=edtCity.Text;
+        Parameters.ParamByName('gen').Value:=RadioGroup1.ItemIndex;
+        //Parameters.ParamByName('gen').Value:=ComboBox2.Text;
+        Parameters.ParamByName('AccNo').Value:=edtAccNo.Text;
+        Parameters.ParamByName('dob').Value:=DateToStr(dateset) ;
+
+        //Parameters.ParamByName('user').Value:=edtFirstName.Text + '01';
+        //Parameters.ParamByName('pass').Value:= '12345';
+        ExecSQL;
+        Close;
+        // inserting into user table
+{        sql.Text := 'insert into user_details(userid, password)' +
+        ' values (:user, :pass)';
+                Parameters.ParamByName('user').Value:= edtFirstName.Text + '01';
+                        Parameters.ParamByName('pass').Value:= '12345';
+                                ExecSQL;
+                                        Close;}
+        ShowMessage('Entry Added Successfully');
+        bankDetailsFm.edtFirstName.Clear;
+        bankDetailsFm.edtLastName.Clear;
+        bankDetailsFm.edtAccNo.Clear;
+        bankDetailsFm.edtCity.Clear;
+        //bankDetailsFm.edtDOB.Clear;
+        gcustomerid:=0;
+        DataModule1.ADOQueryinsert.Active:= False;
+        DataModule1.ADOQueryinsert.Active:= True;
+        DBGrid1.DataSource:= DataModule1.DataSource2;
+
+      end;
+    end
+    else
+    ShowMessage('Name cannot be Null!');
+  end;
+end;
+
+
+procedure TbankDetailsFm.btnUpdateClick(Sender: TObject);
+begin
+  if gcustomerid <>0 then
+  begin
+    with DataModule1.ADOQueryupdate do
+    begin
+      close;
+      sql.Clear;
+      sql.Text:='update account_details set Account_type=:AccType where Account_no=:accNo';
+      Parameters.ParamByName('accNo').Value:=gAccNo;
+      Parameters.ParamByName('AccType').Value:=ComboBox1.Text;
+      ExecSql;
+      Close;
+      SQL.Clear;
+      SQL.Text:='update customer_details set First_name=:FirstName,'+
+      'Last_Name=:LastName,Account_no=:AccNo,' + 'City=:Cty,Gender=:gen where Customer_id=:ID';
+      Parameters.ParamByName('FirstName').Value:=edtFirstName.Text;
+      Parameters.ParamByName('LastName').Value:=edtLastName.Text;
+      Parameters.ParamByName('Cty').Value:=edtCity.Text;
+      Parameters.ParamByName('gen').Value:=ComboBox2.Text;
+      Parameters.ParamByName('AccNo').Value:=edtAccNo.Text;
+      Parameters.ParamByName('ID').Value:=gcustomerid;
+
+      ExecSQL;
+      Close;
+      ShowMessage('Entry Updated Successfully');
+
+      bankDetailsFm.edtFirstName.Clear;
+      bankDetailsFm.edtLastName.Clear;
+      bankDetailsFm.edtAccNo.Clear;
+      bankDetailsFm.edtCity.Clear;
+     // bankDetailsFm.edtDOB.Clear;
+      bankDetailsFm.edtCurrentBalance.Clear;
+      bankDetailsFm.edtDebitCredit.Clear;
+      gcustomerid:=0;
+    end;
+    DataModule1.ADOQueryinsert.Active:= False;
+    DataModule1.ADOQueryinsert.Active:= True;
+    DBGrid1.DataSource:= DataModule1.DataSource2;
+  end
+  else
+  ShowMessage('Select customer to update');
+end;
+
+procedure TbankDetailsFm.btnBalanceClick(Sender: TObject);
+begin
+  if gcustomerid<>0 then
+  begin
+    edtCurrentBalance.Text:=gbalance.ToString;
+  end
+  else
+  ShowMessage('Select customer to display balance');
+end;
+
+
+procedure TbankDetailsFm.DBGrid1CellClick(Column: TColumn);
+begin
+  gcustomerid:= DBGrid1.DataSource.DataSet.Fields.Fields[0].Value;
+  edtFirstName.Text:= DBGrid1.DataSource.DataSet.Fields.Fields[1].Value;
+  edtLastName.Text:= DBGrid1.DataSource.DataSet.Fields.Fields[2].Value;
+  edtCity.Text:= DBGrid1.DataSource.DataSet.Fields.Fields[3].Value;
+  edtAccNo.Text:= DBGrid1.DataSource.DataSet.Fields.Fields[6].Value;
+  gAccNo:= DBGrid1.DataSource.DataSet.Fields.Fields[6].Value;
+  gbalance:= DBGrid1.DataSource.DataSet.Fields.Fields[9].Value;
+  //dtpDOB.Date:= DBGrid1.DataSource.DataSet.Fields.Fields[4].Value;
+end;
+
+
+{
+procedure TbankDetailsFm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  bankDetailsFm.close;
+    BnkLoginFM.show;
+    end;}
+
+procedure TbankDetailsFm.FormCreate(Sender: TObject);
+begin
+  DataModule1.ADOConnection1.Connected:= true;
+  DataModule1.ADOConnection1.LoginPrompt:= False;
+  DataModule1.ADOQuery1.Connection:= DataModule1.ADOConnection1;
+  DataModule1.ADOQuery1.SQL.Text:=('select * from customer_details');
+  DataModule1.ADOQuery1.Connection.Connected:= True;
+  DataModule1.ADOQuery1.Active:= True;
+  DataModule1.DataSource1.DataSet:=DataModule1.ADOQuery1;
+  DataModule1.DataSource1.DataSet.Active:=True;
+  DataModule1.ADOQueryinsert.Active:= True;
+  DataModule1.ADOQueryupdate.Active:= True;
+  gcustomerid:=0;
+end;
+
+
+
+procedure TbankDetailsFm.RadioGroup1Click(Sender: TObject);
+begin
+{case
+  RadioGroup1.ItemIndex of
+   // 0 : Parameters.ParamByName('gen').Value:=;
+   end};
+end;
+
+procedure TbankDetailsFm.btnLogoutClick(Sender: TObject);
+begin
+  bankDetailsFm.close;
+  BnkLoginFM.Show;
+  BnkLoginFM.edtUserName.Clear;
+  BnkLoginFM.edtPassword.Clear;
+  BnkLoginFM.edtUserName.setfocus;
+end;
+
+end.
+

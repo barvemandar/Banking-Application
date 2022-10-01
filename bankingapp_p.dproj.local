@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/08/03 11:07:29.000.755,=C:\Users\Umang\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/08/16 11:31:43.000.348,=C:\Users\Umang\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/08/16 11:32:38.000.411,C:\Users\Umang\Documents\Embarcadero\Studio\Projects\Unit1.pas=E:\Mandar_Delphitraining\bankingapplication\bankingapp_u.pas</Transaction>
+    <Transaction>2022/08/16 11:32:38.000.411,C:\Users\Umang\Documents\Embarcadero\Studio\Projects\Unit1.dfm=E:\Mandar_Delphitraining\bankingapplication\bankingapp_u.dfm</Transaction>
+    <Transaction>2022/08/16 11:32:43.000.811,C:\Users\Umang\Documents\Embarcadero\Studio\Projects\Project3.dproj=E:\Mandar_Delphitraining\bankingapplication\bankingapp_p.dproj</Transaction>
+    <Transaction>2022/08/16 11:40:23.000.524,=E:\Mandar_Delphitraining\bankingapplication\Unit1.pas</Transaction>
+    <Transaction>2022/08/16 11:53:24.000.513,E:\Mandar_Delphitraining\bankingapplication\Unit1.pas=E:\Mandar_Delphitraining\bankingapplication\bankingDM.pas</Transaction>
+    <Transaction>2022/08/16 11:53:24.000.513,E:\Mandar_Delphitraining\bankingapplication\Unit1.dfm=E:\Mandar_Delphitraining\bankingapplication\bankingDM.dfm</Transaction>
+    <Transaction>2022/08/16 12:33:00.000.424,=E:\Mandar_Delphitraining\bankingapplication\Unit2.pas</Transaction>
+    <Transaction>2022/08/16 13:06:41.000.146,E:\Mandar_Delphitraining\bankingapplication\Unit2.dfm=E:\Mandar_Delphitraining\bankingapplication\homeScreen_u.dfm</Transaction>
+    <Transaction>2022/08/16 13:06:41.000.146,E:\Mandar_Delphitraining\bankingapplication\Unit2.pas=E:\Mandar_Delphitraining\bankingapplication\homeScreen_u.pas</Transaction>
+    <Transaction>2022/08/17 12:20:17.000.978,E:\Mandar_Delphitraining\bankingapplication\bankingapp_u.pas=E:\Mandar_Delphitraining\bankingapplication\bankLogin_u.pas</Transaction>
+    <Transaction>2022/08/17 12:20:17.000.978,E:\Mandar_Delphitraining\bankingapplication\bankingapp_u.dfm=E:\Mandar_Delphitraining\bankingapplication\bankLogin_u.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

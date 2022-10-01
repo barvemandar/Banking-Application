@@ -1,0 +1,85 @@
+unit bankLogin_u;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, homeScreen_u,bankingDM,
+  Vcl.StdCtrls;
+
+type
+  TBnkLoginFM = class(TForm)
+    lblHeader: TLabel;
+    lblUserName: TLabel;
+    lblPassword: TLabel;
+    edtUserName: TEdit;
+    edtPassword: TEdit;
+    btnLogin: TButton;
+    procedure btnLoginClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+
+
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  BnkLoginFM: TBnkLoginFM;
+
+implementation
+
+{$R *.dfm}
+
+
+
+
+procedure TBnkLoginFM.btnLoginClick(Sender: TObject);
+var
+  luser : String;
+
+begin
+  DataModule1.ADOQuery1.Active:= True;
+  with DataModule1.ADOQuery1 do
+  begin
+    Active:= True;
+    Close;
+    SQL.Clear;
+    SQL.Add('Select * FROM Customer_details WHERE UserID= :UserName and C_Password= :Password');
+    Parameters.ParamByName('UserName').Value:= edtUserName.Text;
+    Parameters.ParamByName('Password').Value:= edtPassword.Text;
+    DataModule1.ADOQuery1.open;
+    luser := fieldbyname ('UserID').asstring;
+    if luser='' then
+    ShowMessage('Incorrect Userid or Password')
+    else
+    begin
+      DataModule1.ADOQueryinsert.Active:= True;
+      bankDetailsFm.DBGrid1.DataSource:= DataModule1.DataSource2;
+      bankDetailsFm.show;
+      BnkLoginFM.hide;
+      bankDetailsFm.edtFirstName.SetFocus;
+    end;
+    Close;
+  end;
+end;
+
+
+
+procedure TBnkLoginFM.FormCreate(Sender: TObject);
+begin
+ DataModule1.ADOConnection1.Connected := True;
+end;
+
+procedure TBnkLoginFM.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key=#13 then
+  btnLogin.Click;
+end;
+
+end.
+
+
